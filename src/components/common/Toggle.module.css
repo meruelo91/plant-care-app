@@ -1,0 +1,82 @@
+/*
+ * Toggle component styles
+ *
+ * A switch-style toggle for boolean settings.
+ * Follows iOS/Android toggle conventions:
+ *   - 52x32px track (larger than 44px min touch target)
+ *   - Smooth slide animation
+ *   - Green accent color when ON
+ */
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  gap: var(--space-md);
+}
+
+.labelGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0; /* Allow text truncation if needed */
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.description {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+}
+
+/* ─── Toggle track (pill-shaped background) ─── */
+.track {
+  position: relative;
+  width: 52px;
+  height: 32px;
+  background-color: #D1D5DB;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.trackOn {
+  background-color: var(--color-accent);
+}
+
+.track:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.track.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Toggle thumb (circular knob) ─── */
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 28px;
+  height: 28px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.thumbOn {
+  transform: translateX(20px);
+}

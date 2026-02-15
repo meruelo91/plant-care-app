@@ -1,0 +1,124 @@
+/*
+ * HomePage styles
+ *
+ * RESPONSIVE GRID:
+ * We use CSS Grid with auto-fill + minmax to create a grid that
+ * automatically adjusts the number of columns based on screen width.
+ *
+ * How it works:
+ *   repeat(auto-fill, minmax(280px, 1fr))
+ *   - auto-fill: create as many columns as fit
+ *   - minmax(280px, 1fr): each column is at least 280px, at most 1 fraction
+ *   - On a 320px phone: 1 column (320 < 280*2)
+ *   - On a 640px tablet: 2 columns (640 >= 280*2)
+ *   - On a 960px desktop: 3 columns (960 >= 280*3)
+ *
+ * No media queries needed! The grid adapts automatically.
+ *
+ * FAB (Floating Action Button):
+ * A circular button fixed in the bottom-right corner.
+ * Common pattern in mobile apps (Gmail, WhatsApp, etc.)
+ * Positioned above the bottom nav bar.
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Loading state */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  min-height: 60vh;
+  color: var(--color-text-secondary);
+}
+
+/* CSS animation for the loading spinner */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+/* Responsive plant grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--space-md));
+  right: var(--space-md);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.35);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  z-index: 50;
+}
+
+.fab:hover {
+  background-color: var(--color-primary-light);
+}
+
+.fab:active {
+  transform: scale(0.93);
+}
+
+/* Development tools - temporary, remove in production */
+.devTools {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-md);
+}
+
+.devButton {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px dashed var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.devButton:hover {
+  opacity: 0.7;
+}

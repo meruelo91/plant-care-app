@@ -1,0 +1,217 @@
+/*
+ * SettingsPage styles
+ *
+ * Simple card-based layout for settings sections.
+ * Each section (location, notifications) gets its own card.
+ * MVP: only location is functional, notifications is a placeholder.
+ */
+
+.page {
+  padding-top: var(--space-sm);
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+
+/* ─── Settings Section Card ─── */
+.section {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.sectionIcon {
+  color: var(--color-primary);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ─── Location Info ─── */
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+
+.locationLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.locationValue {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.locationBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
+  background-color: #E8F5E9;
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ─── Notifications Section ─── */
+
+/* Message when browser doesn't support notifications */
+.notSupportedMessage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Warning when permission is denied */
+.permissionWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: #FEF3C7;
+  border-radius: var(--radius-sm);
+  color: #92400E;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-top: var(--space-sm);
+}
+
+.permissionWarning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Time picker row */
+.timePickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  margin-top: var(--space-sm);
+  border-top: 1px solid #E5E7EB;
+}
+
+.timeLabel {
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.timeSelect {
+  min-height: 40px;
+  padding: var(--space-xs) var(--space-md);
+  padding-right: 32px;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background-color: var(--color-bg-card);
+  border: 1.5px solid #D1D5DB;
+  border-radius: var(--radius-sm);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  cursor: pointer;
+}
+
+.timeSelect:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+/* Permission status badge */
+.permissionBadge {
+  padding-top: var(--space-sm);
+}
+
+.badgeGranted,
+.badgeDefault {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeGranted {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.badgeDefault {
+  background-color: #F3F4F6;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Test Notification Button ─── */
+.testButtonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  margin-top: var(--space-sm);
+  border-top: 1px solid #E5E7EB;
+}
+
+.testButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  background-color: #E8F5E9;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.testButton:hover:not(:disabled) {
+  background-color: #C8E6C9;
+}
+
+.testButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.testSuccess {
+  font-size: 0.8rem;
+  color: #065F46;
+}
+
+.testError {
+  font-size: 0.8rem;
+  color: #DC2626;
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- PWA meta tags -->
+    <!-- theme-color sets the browser's toolbar color on mobile -->
+    <meta name="theme-color" content="#2D6A4F" />
+
+    <!-- These Apple-specific tags are needed because iOS Safari doesn't
+         fully support the standard Web App Manifest yet -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Plant Care" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <!-- Standard favicon and PWA icon -->
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
+
+    <!-- Viewport: essential for mobile-responsive design.
+         width=device-width: match screen width
+         initial-scale=1.0: no zoom on load
+         viewport-fit=cover: extend to iPhone notch area -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>Plant Care</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

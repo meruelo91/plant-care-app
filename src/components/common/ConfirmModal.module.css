@@ -1,0 +1,124 @@
+/*
+ * ConfirmModal styles
+ *
+ * OVERLAY + MODAL PATTERN:
+ * The overlay covers the entire screen with a dark semi-transparent
+ * background. The modal card sits centered on top. This is the
+ * standard pattern for dialogs in web apps.
+ *
+ * position:fixed takes the element out of the normal document flow
+ * and positions it relative to the viewport (the browser window).
+ * inset:0 is shorthand for top:0 right:0 bottom:0 left:0.
+ *
+ * z-index:200 ensures the modal appears above everything else
+ * (the bottom nav is z-index:100).
+ */
+
+/* Full-screen dark overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal card */
+.modal {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon at the top */
+.iconWrapper {
+  margin-bottom: var(--space-md);
+}
+
+.iconDanger {
+  color: var(--color-danger);
+}
+
+.iconDefault {
+  color: var(--color-warning);
+}
+
+/* Text */
+.title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
+.message {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+}
+
+/* Button row */
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Shared button base */
+.cancelButton,
+.confirmButton,
+.dangerButton {
+  flex: 1;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease;
+}
+
+.cancelButton:hover,
+.confirmButton:hover,
+.dangerButton:hover {
+  opacity: 0.85;
+}
+
+.cancelButton {
+  background-color: #F3F4F6;
+  color: var(--color-text);
+}
+
+.confirmButton {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.dangerButton {
+  background-color: var(--color-danger);
+  color: white;
+}

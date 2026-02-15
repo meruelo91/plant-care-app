@@ -1,0 +1,768 @@
+/*
+ * PlantDetailPage styles
+ *
+ * LAYOUT PATTERN - "Hero + Content Sheet":
+ * The page has two main sections:
+ *   1. Hero image (top ~40% of screen) - full width with floating buttons
+ *   2. Content card - white card that overlaps the hero image slightly
+ *
+ * This is a very common pattern in mobile apps (Spotify, Airbnb, etc.)
+ * The content card uses a negative margin-top to "pull up" over the hero,
+ * creating a layered effect that looks polished and modern.
+ *
+ * BREAKING OUT OF PARENT PADDING:
+ * The parent container (.app-main) has padding: 16px. To make the hero
+ * image go full-width, we use negative margins and extra width.
+ * This is a common technique when a child needs to "escape" its parent's padding.
+ */
+
+/* ─── Page wrapper ─── */
+.page {
+  /* Cancel out the parent's padding so the hero goes edge-to-edge */
+  margin: calc(-1 * var(--space-md));
+  margin-bottom: 0;
+}
+
+/* ─── Loading & Error states ─── */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--space-md);
+  /* Restore the padding since these states don't have a hero */
+  margin: var(--space-md);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E5E7EB;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+/* Not found state */
+.notFoundContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: var(--space-md);
+  text-align: center;
+  margin: var(--space-md);
+}
+
+.notFoundIcon {
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+}
+
+.notFoundTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.notFoundMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: var(--space-sm);
+}
+
+/* ─── Hero Image Section ─── */
+
+/*
+ * POSITION: RELATIVE on the container:
+ * This creates a "positioning context" so that the floating buttons
+ * (which use position: absolute) are positioned relative to this
+ * container, not the whole page.
+ */
+.heroContainer {
+  position: relative;
+  height: 40vh;
+  min-height: 250px;
+  max-height: 400px;
+  overflow: hidden;
+  background-color: #E5E7EB;
+}
+
+/*
+ * OBJECT-FIT: COVER:
+ * Makes the image fill the container while maintaining its aspect ratio.
+ * Parts of the image may be "cropped" (hidden) to fill the space.
+ * Without this, the image would stretch and distort.
+ */
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder when there's no photo */
+.heroPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E5E7EB;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * GRADIENT OVERLAY:
+ * A subtle dark gradient at the top of the hero image.
+ * This ensures the white floating buttons are visible even on
+ * light-colored photos. It's a common UI trick in apps with
+ * photos behind navigation elements.
+ *
+ * position: absolute + inset: 0 makes it cover the entire hero.
+ * pointer-events: none means clicks pass through to elements below.
+ */
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0) 40%
+  );
+  pointer-events: none;
+}
+
+/*
+ * FLOATING BUTTONS:
+ * position: absolute takes them out of the normal flow and positions
+ * them relative to .heroContainer (which has position: relative).
+ * They "float" on top of the hero image.
+ */
+.floatingButtons {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  /* Ensure buttons are above the gradient overlay */
+  z-index: 10;
+  /* Account for iPhone notch/status bar when in standalone PWA mode */
+  padding-top: env(safe-area-inset-top);
+}
+
+.floatingButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  /* Semi-transparent background so you can still see the photo behind */
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  /* backdrop-filter adds a subtle blur effect (iOS-style glass look) */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 0.15s ease;
+}
+
+.floatingButton:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.deleteButton {
+  color: var(--color-danger);
+}
+
+/* ─── Content Card ─── */
+
+/*
+ * NEGATIVE MARGIN-TOP:
+ * This is the key trick for the "sheet" effect. By pulling the card
+ * up with a negative margin, it overlaps the hero image, creating
+ * a layered look. The border-radius on top completes the illusion.
+ */
+.contentCard {
+  position: relative;
+  margin-top: -24px;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-lg) var(--space-md);
+  padding-bottom: calc(var(--nav-height) + var(--space-lg));
+  /* subtle shadow to emphasize the layered effect */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Plant Info Header ─── */
+.plantHeader {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+/*
+ * TYPE BADGE:
+ * A small "pill" shape showing the plant type (e.g., "Suculenta").
+ * Common UI pattern for categories/tags. The inline-flex + gap
+ * aligns the icon and text horizontally with spacing.
+ */
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background-color: #E8F5E9;
+  color: var(--color-primary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+
+.plantName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
+.plantSpecies {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* ─── Sections ─── */
+.section {
+  margin-bottom: var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-sm);
+}
+
+/* ─── Watering Info ─── */
+.wateringInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+}
+
+.wateringIcon {
+  color: var(--color-primary-light);
+  flex-shrink: 0;
+}
+
+.wateringText {
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.wateringLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  display: block;
+  margin-top: 2px;
+}
+
+/*
+ * PLACEHOLDER BOX:
+ * A dashed border box that signals "feature coming soon".
+ * This is a common design pattern for showing where future
+ * content will go. The dashed border makes it look intentionally
+ * empty rather than broken.
+ */
+.placeholderBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border: 2px dashed #D1D5DB;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.placeholderIcon {
+  color: var(--color-text-secondary);
+  opacity: 0.4;
+}
+
+.placeholderText {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Water Button ─── */
+
+/*
+ * The water button is disabled in this MVP but styled and ready
+ * for when the watering feature is implemented.
+ *
+ * :disabled pseudo-class matches when the button has the disabled
+ * attribute. We reduce opacity and change the cursor to show
+ * it's not interactive.
+ */
+.waterButton {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  margin-top: var(--space-md);
+}
+
+.waterButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.waterButton:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+/* ─── AI Advice Section ─── */
+
+/*
+ * ADVICE BUTTON:
+ * A button that triggers the AI advice fetch.
+ * Styled differently from the placeholderBox to look interactive.
+ * Uses a gradient background for a modern, premium feel.
+ */
+.adviceButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  margin-top: var(--space-sm);
+}
+
+.adviceButton:hover {
+  opacity: 0.9;
+}
+
+/* ─── Advice Loading State ─── */
+.adviceLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  margin-top: var(--space-sm);
+}
+
+.adviceSpinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #E5E7EB;
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.adviceLoadingText {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Advice Error State ─── */
+.adviceError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-sm);
+  text-align: center;
+}
+
+.adviceErrorText {
+  font-size: 0.85rem;
+  color: var(--color-danger);
+}
+
+.adviceRetryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  background-color: white;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/*
+ * ADVICE CARD:
+ * The main container for AI-generated advice.
+ * Uses a subtle green background to differentiate it from
+ * other sections and signal that it's "special" content.
+ */
+.adviceCard {
+  margin-top: var(--space-sm);
+  padding: var(--space-md);
+  background-color: #F0FFF4;
+  border: 1px solid #C6F6D5;
+  border-radius: var(--radius-sm);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.adviceHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.adviceHeaderIcon {
+  color: var(--color-primary);
+}
+
+.adviceHeaderTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.adviceText {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+  /* Preserve line breaks from the AI response */
+  white-space: pre-line;
+}
+
+/*
+ * ADVICE DETAILS GRID:
+ * Three data points (frequency, best time, amount) displayed
+ * side by side in a responsive grid.
+ *
+ * repeat(3, 1fr) creates 3 equal columns.
+ * On very small screens, the items will shrink but stay in one row
+ * since the content is short.
+ */
+.adviceDetails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.adviceDetailItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background-color: white;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.adviceDetailIcon {
+  color: var(--color-primary-light);
+}
+
+.adviceDetailLabel {
+  font-size: 0.7rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.adviceDetailValue {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ─── Advice Metadata ─── */
+
+/*
+ * Small text below the advice card showing when and where
+ * the advice was generated. Gives the user context about
+ * how relevant the advice still is.
+ */
+.adviceMetadata {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-sm);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * FALLBACK BADGE:
+ * An orange pill that appears when the advice came from
+ * hardcoded fallbacks instead of Claude AI. Signals to the
+ * user that the advice is generic, not personalized.
+ */
+.adviceFallbackBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
+  background-color: #FEF3C7;
+  color: #92400E;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: var(--space-sm);
+  width: fit-content;
+}
+
+/* ─── Regenerate Button ─── */
+.regenerateButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  margin-top: var(--space-sm);
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  width: 100%;
+}
+
+.regenerateButton:hover {
+  background-color: rgba(45, 106, 79, 0.05);
+}
+
+.regenerateButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Next Watering Indicator ─── */
+
+/*
+ * Shows when the next watering is due, color-coded by urgency.
+ * Same flex structure as .wateringInfo for visual consistency.
+ *
+ * URGENCY LEVELS:
+ *   ok → green: plenty of time
+ *   soon → amber: water tomorrow
+ *   today → amber: water today
+ *   overdue → red: past due, needs water now!
+ */
+.nextWateringInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  margin-top: var(--space-sm);
+  transition: background-color 0.2s ease;
+}
+
+.nextWateringIcon {
+  flex-shrink: 0;
+}
+
+.nextWateringText {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.nextWateringLabel {
+  font-size: 0.75rem;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Urgency: OK — plenty of time (green) */
+.urgency-ok {
+  background-color: #E8F5E9;
+}
+.urgency-ok .nextWateringIcon { color: var(--color-primary-light); }
+.urgency-ok .nextWateringText { color: var(--color-primary-dark); }
+.urgency-ok .nextWateringLabel { color: var(--color-primary); }
+
+/* Urgency: Soon — water tomorrow (amber) */
+.urgency-soon {
+  background-color: #FEF3C7;
+}
+.urgency-soon .nextWateringIcon { color: var(--color-warning); }
+.urgency-soon .nextWateringText { color: #92400E; }
+.urgency-soon .nextWateringLabel { color: #B45309; }
+
+/* Urgency: Today — water today (amber-orange) */
+.urgency-today {
+  background-color: #FEF3C7;
+}
+.urgency-today .nextWateringIcon { color: #D97706; }
+.urgency-today .nextWateringText { color: #92400E; }
+.urgency-today .nextWateringLabel { color: #B45309; }
+
+/* Urgency: Overdue — past due (red) */
+.urgency-overdue {
+  background-color: #FEF2F2;
+}
+.urgency-overdue .nextWateringIcon { color: var(--color-danger); }
+.urgency-overdue .nextWateringText { color: var(--color-danger); }
+.urgency-overdue .nextWateringLabel { color: #B91C1C; }
+
+/* ─── Water Button States ─── */
+
+/*
+ * Success flash: brief green pulse after watering.
+ * Triggers when wasJustWatered is true (2.5 seconds).
+ */
+.waterButtonSuccess {
+  background-color: var(--color-accent);
+  animation: waterPulse 0.6s ease-out;
+}
+
+@keyframes waterPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/*
+ * Already watered today: softer green to indicate completion
+ * rather than unavailability. Different from the generic :disabled
+ * which is gray/dimmed.
+ */
+.waterButtonDone {
+  background-color: var(--color-accent);
+  opacity: 0.7;
+}
+
+/* Small spinner inside the water button while saving */
+.buttonSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Celebration Overlay ─── */
+
+/*
+ * A brief full-screen overlay with floating emojis that appears
+ * after watering. Uses pointer-events: none so it doesn't block
+ * interaction, and auto-fades via CSS animation.
+ */
+.celebrationOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  pointer-events: none;
+  z-index: 50;
+  animation: celebrationFade 2.5s ease-out forwards;
+}
+
+@keyframes celebrationFade {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.celebrationEmoji {
+  font-size: 3rem;
+  animation: celebrationFloat 2.5s ease-out forwards;
+}
+
+.celebrationEmoji:nth-child(1) { animation-delay: 0s; }
+.celebrationEmoji:nth-child(2) { animation-delay: 0.15s; }
+.celebrationEmoji:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes celebrationFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  40% {
+    transform: translateY(-20px) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(0.8);
+  }
+}

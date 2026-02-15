@@ -1,0 +1,101 @@
+/*
+ * PlantCard styles
+ *
+ * DESIGN DECISIONS:
+ * - Card pattern: white background + shadow = elevated feel
+ * - aspect-ratio on image: consistent height regardless of photo size
+ * - transition on hover: subtle feedback that the card is interactive
+ * - overflow:hidden on card: image corners follow the card's border-radius
+ */
+
+.card {
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+/* Focus styles for keyboard navigation (accessibility) */
+.card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Image area */
+.imageContainer {
+  position: relative; /* For positioning the water badge */
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: #E8F5E9;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crop image to fill, don't stretch */
+}
+
+/* Shown when no photo exists */
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  opacity: 0.5;
+}
+
+/* "Needs water" badge - floats over the image */
+.waterBadge {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  background-color: var(--color-warning);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Plant info section */
+.info {
+  padding: var(--space-md);
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 2px;
+}
+
+.species {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.watered {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

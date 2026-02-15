@@ -1,0 +1,78 @@
+/*
+ * WateringCalendar styles
+ *
+ * LAYOUT: Horizontal row of 7 equal-width day cells using CSS Grid.
+ * repeat(7, 1fr) ensures each day gets exactly 1/7 of available width,
+ * consistent sizing on any screen (even 375px iPhone = ~48px per cell).
+ *
+ * VISUAL STATES:
+ *   - Default: gray text and empty circle icon
+ *   - Today: highlighted green background, bolder text
+ *   - Watered: green checkmark icon
+ *   - Today + Watered: stronger green background
+ */
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Individual day cell ─── */
+.dayCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.dayInitial {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.dateNumber {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.statusIcon {
+  color: #D1D5DB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+/* ─── Today highlight ─── */
+.dayCellToday {
+  background-color: #E8F5E9;
+}
+
+.dayCellToday .dayInitial {
+  color: var(--color-primary);
+}
+
+.dayCellToday .dateNumber {
+  color: var(--color-primary-dark);
+}
+
+/* ─── Watered state ─── */
+.dayCellWatered .statusIcon {
+  color: var(--color-accent);
+}
+
+/* Today AND watered: stronger green background */
+.dayCellToday.dayCellWatered {
+  background-color: #D4EDDA;
+}

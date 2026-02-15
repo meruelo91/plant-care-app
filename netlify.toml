@@ -1,0 +1,53 @@
+# ─────────────────────────────────────────────────────────────
+# Netlify Configuration
+# ─────────────────────────────────────────────────────────────
+#
+# This file tells Netlify how to build and deploy the app.
+#
+# IMPORTANT: The ANTHROPIC_API_KEY must be set in:
+# Netlify Dashboard → Site Settings → Environment Variables
+# DO NOT put the API key in any file that gets committed to git!
+#
+# ─────────────────────────────────────────────────────────────
+
+[build]
+  # Build command - compiles TypeScript and bundles with Vite
+  command = "npm run build"
+
+  # Output directory - where Vite puts the built files
+  publish = "dist"
+
+  # Serverless functions directory
+  functions = "netlify/functions"
+
+# ─── SPA Routing ───
+# React Router uses client-side routing. When a user refreshes
+# on /settings or /plant/123, the server needs to return index.html
+# so React can handle the route. Without this, you'd get 404 errors.
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ─── Headers ───
+# Security and caching headers for the production site
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets aggressively (Vite adds hashes to filenames)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Service worker should not be cached
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

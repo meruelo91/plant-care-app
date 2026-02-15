@@ -1,0 +1,63 @@
+/*
+ * EmptyState styles
+ *
+ * CSS MODULES:
+ * When you import this file as `import styles from './EmptyState.module.css'`,
+ * each class name gets a unique hash added (e.g., .container_a1b2c3).
+ * This means these styles ONLY apply to this component and can never
+ * accidentally affect other parts of the app. No more CSS conflicts!
+ *
+ * We use var(--color-...) to reference the global CSS variables defined
+ * in index.css. This keeps colors consistent across the whole app.
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  min-height: 60vh; /* Take up most of the screen */
+}
+
+.iconWrapper {
+  color: var(--color-accent);
+  margin-bottom: var(--space-lg);
+  opacity: 0.7;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.message {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+.actionButton {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: var(--space-md) var(--space-xl);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.actionButton:hover {
+  background-color: var(--color-primary-light);
+}
+
+.actionButton:active {
+  transform: scale(0.97);
+}

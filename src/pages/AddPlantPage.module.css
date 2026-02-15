@@ -1,0 +1,266 @@
+/*
+ * AddPlantPage styles
+ *
+ * FORM DESIGN DECISIONS:
+ *
+ * 1. TOUCH TARGETS:
+ *    Apple's Human Interface Guidelines recommend a minimum of 44px
+ *    for interactive elements. All inputs and buttons meet this.
+ *
+ * 2. HIDDEN FILE INPUT:
+ *    The native <input type="file"> looks different in every browser
+ *    and can't be styled. We hide it and create a custom visual area
+ *    that triggers the input via JavaScript (ref.current.click()).
+ *    The input is hidden with the .hiddenInput class.
+ *
+ * 3. PHOTO AREA:
+ *    Before taking a photo: a dashed-border placeholder with a camera
+ *    icon invites the user to tap.
+ *    After taking a photo: the image preview replaces the placeholder.
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Header with back button */
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Form layout */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Photo capture area */
+.photoSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* The actual <input type="file"> is invisible.
+   We use position:absolute + opacity:0 instead of display:none
+   so it remains accessible to screen readers. */
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Dashed placeholder shown when no photo is taken yet */
+.photoPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  height: 160px;
+  border: 2px dashed var(--color-accent);
+  border-radius: var(--radius-md);
+  background-color: rgba(82, 183, 136, 0.05);
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.photoPlaceholder:hover {
+  border-color: var(--color-primary);
+  background-color: rgba(82, 183, 136, 0.1);
+}
+
+.photoPlaceholderText {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Photo preview after capture */
+.photoPreview {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.previewImage {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+.changePhotoButton {
+  display: block;
+  margin-top: var(--space-sm);
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  padding: var(--space-xs) 0;
+}
+
+.changePhotoButton:hover {
+  text-decoration: underline;
+}
+
+/* Form field group: label + input + error */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-danger);
+  margin-left: 2px;
+}
+
+.hint {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-left: var(--space-xs);
+}
+
+/* Shared input and select styles */
+.input,
+.select {
+  width: 100%;
+  min-height: 48px; /* 44px minimum touch target + padding */
+  padding: var(--space-sm) var(--space-md);
+  font-size: 1rem;
+  color: var(--color-text);
+  background-color: var(--color-bg-card);
+  border: 1.5px solid #D1D5DB;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+/* Style the placeholder text */
+.input::placeholder {
+  color: #9CA3AF;
+}
+
+/* The select dropdown needs a custom arrow appearance */
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+/* Error state for inputs */
+.inputError {
+  border-color: var(--color-danger);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.15);
+}
+
+/* Error message below field */
+.error {
+  font-size: 0.8rem;
+  color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Submit button */
+.submitButton {
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-md) var(--space-lg);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  margin-top: var(--space-sm);
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+.submitButton:active:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner animation for the submit button loading state */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
