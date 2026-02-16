@@ -48,39 +48,42 @@
   animation: spin 1.5s linear infinite;
 }
 
-/* ─── Header ─── */
+/* ─── Header - Vertical Layout ─── */
 .header {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
 
-.headerTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .title {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-text);
+  line-height: 1.2;
 }
 
-.location {
+/* Location badge below title */
+.locationBadge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.8rem;
+  gap: 6px;
+  font-size: 0.85rem;
   color: var(--color-text-secondary);
   background-color: rgba(0, 0, 0, 0.04);
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  width: fit-content;
 }
 
-.subtitle {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
+.locationBadge svg {
+  flex-shrink: 0;
+}
+
+/* Plant count - more subtle */
+.plantCount {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
 /* ─── Fade-in animation for grid ─── */
@@ -106,10 +109,11 @@
 /* ─── Floating Action Button ─── */
 .fab {
   position: fixed;
-  bottom: calc(var(--nav-height) + var(--space-lg));
+  /* Position above nav: nav height + safe area + spacing */
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + var(--space-md));
   right: var(--space-md);
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-full);
   background-color: #10B981;
   color: white;
@@ -118,15 +122,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 50;
 }
 
 .fab:hover {
   background-color: #059669;
-  transform: scale(1.08);
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
 }
 
 .fab:active {

@@ -13,14 +13,15 @@
   background-color: var(--color-bg-card);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  /* Sombra más sutil */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .card:active {
@@ -96,9 +97,12 @@
   background-color: #F59E0B;
 }
 
+/* Badge "Bien" más discreto y pequeño */
 .badgeOk {
   background-color: #10B981;
-  opacity: 0.9;
+  opacity: 0.85;
+  font-size: 0.7rem;
+  padding: 3px 8px;
 }
 
 /* ─── Plant info section ─── */

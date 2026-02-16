@@ -76,18 +76,16 @@ const HomePage: React.FC = () => {
   // Success state: plants exist
   return (
     <div className={styles.page}>
-      {/* Header */}
+      {/* Header - vertical layout for better readability */}
       <header className={styles.header}>
-        <div className={styles.headerTop}>
-          <h1 className={styles.title}>🌱 Mis Plantas</h1>
-          {settings?.location?.city && (
-            <span className={styles.location}>
-              <MapPin size={14} />
-              {settings.location.city}
-            </span>
-          )}
-        </div>
-        <p className={styles.subtitle}>
+        <h1 className={styles.title}>🌱 Mis Plantas</h1>
+        {settings?.location?.city && (
+          <div className={styles.locationBadge}>
+            <MapPin size={14} />
+            <span>{settings.location.city}</span>
+          </div>
+        )}
+        <p className={styles.plantCount}>
           {plants.length} {plants.length === 1 ? 'planta' : 'plantas'}
         </p>
       </header>
