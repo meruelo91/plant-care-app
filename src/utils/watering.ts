@@ -1,5 +1,5 @@
 import { addDays, differenceInDays, subDays, startOfDay, isSameDay } from 'date-fns';
-import type { WateringLog } from '@/types';
+import type { Plant, WateringLog } from '@/types';
 
 /**
  * Watering calculation utilities.
@@ -112,4 +112,47 @@ export function getLast7Days(today: Date = new Date()): Date[] {
  */
 export function wasWateredOnDay(logs: WateringLog[], day: Date): boolean {
   return logs.some((log) => isSameDay(log.wateredAt, day));
+}
+
+// ─── Urgency Levels for UI ───
+
+/**
+ * Urgency level for watering display.
+ * Used to determine badge color and sorting priority.
+ *
+ *   - 'urgent': Plant is overdue (red badge, pulsing animation)
+ *   - 'warning': Plant needs water soon, within 2 days (orange badge)
+ *   - 'ok': Plant is well-watered (green badge, subtle)
+ */
+export type UrgencyLevel = 'urgent' | 'warning' | 'ok';
+
+/**
+ * Get the watering urgency level for a plant.
+ *
+ * This determines the visual styling (badge color) and sort order
+ * in the plant list. Plants with higher urgency appear first.
+ *
+ * @param plant - The plant to evaluate
+ * @returns UrgencyLevel based on days since last watering vs frequency
+ *
+ * @example
+ * const urgency = getWateringUrgency(myPlant);
+ * // 'urgent' if overdue, 'warning' if soon, 'ok' if fine
+ */
+export function getWateringUrgency(plant: Plant): UrgencyLevel {
+  // Never watered = definitely urgent
+  if (!plant.lastWatered) return 'urgent';
+
+  const daysSinceWatered = differenceInDays(new Date(), plant.lastWatered);
+  const frequency = plant.wateringAdvice?.frequencyDays ?? 7;
+  const daysOverdue = daysSinceWatered - frequency;
+
+  // Overdue: should have been watered already
+  if (daysOverdue > 0) return 'urgent';
+
+  // Warning: needs water within the next 2 days
+  if (daysOverdue >= -2) return 'warning';
+
+  // All good
+  return 'ok';
 }

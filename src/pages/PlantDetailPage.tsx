@@ -23,6 +23,7 @@ import { useMarkWatered } from '@/hooks/useMarkWatered';
 import { useWateringHistory } from '@/hooks/useWateringHistory';
 import { calculateNextWatering, getDaysUntilWatering } from '@/utils/watering';
 import ConfirmModal from '@/components/common/ConfirmModal';
+import SuccessAnimation from '@/components/common/SuccessAnimation';
 import WateringCalendar from '@/components/plants/WateringCalendar';
 import styles from './PlantDetailPage.module.css';
 
@@ -77,6 +78,9 @@ const PlantDetailPage: React.FC = () => {
 
   // Local state for the delete confirmation modal
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+
+  // Track if we should show the success animation (separate from wasJustWatered for timing)
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState<boolean>(false);
 
   // ─── Loading state ───
   if (isLoading) {
@@ -353,7 +357,10 @@ const PlantDetailPage: React.FC = () => {
           type="button"
           className={`${styles.waterButton} ${wasJustWatered ? styles.waterButtonSuccess : ''} ${alreadyWateredToday && !wasJustWatered ? styles.waterButtonDone : ''}`}
           disabled={alreadyWateredToday || isMarking}
-          onClick={markAsWatered}
+          onClick={async () => {
+            await markAsWatered();
+            setShowSuccessAnimation(true);
+          }}
         >
           {isMarking ? (
             <>
@@ -378,15 +385,12 @@ const PlantDetailPage: React.FC = () => {
           )}
         </button>
 
-        {/* Celebration overlay: floating emojis after watering */}
-        {wasJustWatered && (
-          <div className={styles.celebrationOverlay}>
-            <span className={styles.celebrationEmoji}>💧</span>
-            <span className={styles.celebrationEmoji}>🌱</span>
-            <span className={styles.celebrationEmoji}>💧</span>
-          </div>
-        )}
       </div>
+
+      {/* ─── Success Animation (full-screen overlay) ─── */}
+      {showSuccessAnimation && (
+        <SuccessAnimation onComplete={() => setShowSuccessAnimation(false)} />
+      )}
 
       {/* ─── Delete Confirmation Modal ─── */}
       <ConfirmModal

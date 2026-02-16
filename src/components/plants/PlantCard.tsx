@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { Flower2, Droplets } from 'lucide-react';
-import { formatDistanceToNow, differenceInDays } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { Plant } from '@/types';
+import { getWateringUrgency, type UrgencyLevel } from '@/utils/watering';
 import styles from './PlantCard.module.css';
 
 /**
@@ -13,10 +14,11 @@ import styles from './PlantCard.module.css';
  * It receives ALL data via props (the Plant object) and doesn't
  * query the database itself. This is called a "presentational component".
  *
- * DATE CALCULATIONS with date-fns:
- * - formatDistanceToNow: "hace 3 dias", "hace 1 semana", etc.
- * - differenceInDays: exact number of days between two dates
- * We use the Spanish locale (es) so dates show in Spanish.
+ * URGENCY-BASED STYLING:
+ * Uses getWateringUrgency() to determine the visual state:
+ *   - 'urgent': Red pulsing badge, red border on card
+ *   - 'warning': Orange badge
+ *   - 'ok': Green subtle badge
  *
  * NAVIGATION:
  * useNavigate() is React Router's hook for programmatic navigation.
@@ -24,19 +26,43 @@ import styles from './PlantCard.module.css';
  * We use it here because the entire card is clickable, not just text.
  */
 
-// How many days without water before showing the "needs water" alert
-const DAYS_UNTIL_NEEDS_WATER = 7;
-
 interface PlantCardProps {
   plant: Plant;
+}
+
+/**
+ * Get the badge text based on urgency level.
+ */
+function getBadgeText(urgency: UrgencyLevel): string {
+  switch (urgency) {
+    case 'urgent':
+      return '💧 Necesita agua';
+    case 'warning':
+      return '⏰ Pronto';
+    case 'ok':
+      return '✓ Bien';
+  }
+}
+
+/**
+ * Get the CSS class name for the badge based on urgency.
+ */
+function getBadgeClass(urgency: UrgencyLevel): string {
+  switch (urgency) {
+    case 'urgent':
+      return styles.badgeUrgent;
+    case 'warning':
+      return styles.badgeWarning;
+    case 'ok':
+      return styles.badgeOk;
+  }
 }
 
 const PlantCard: React.FC<PlantCardProps> = ({ plant }) => {
   const navigate = useNavigate();
 
-  // Calculate watering status
-  const needsWater = plant.lastWatered === null
-    || differenceInDays(new Date(), plant.lastWatered) > DAYS_UNTIL_NEEDS_WATER;
+  // Calculate urgency level using the shared utility
+  const urgency = getWateringUrgency(plant);
 
   // Format "last watered" as a human-readable string
   // formatDistanceToNow returns strings like "hace 3 dias" with Spanish locale
@@ -51,9 +77,14 @@ const PlantCard: React.FC<PlantCardProps> = ({ plant }) => {
     navigate(`/plant/${plant.id}`);
   };
 
+  // Build card class: add urgent border if needed
+  const cardClass = urgency === 'urgent'
+    ? `${styles.card} ${styles.cardUrgent}`
+    : styles.card;
+
   return (
     <article
-      className={styles.card}
+      className={cardClass}
       onClick={handleClick}
       // Keyboard accessibility: make the card focusable and activatable
       role="button"
@@ -78,13 +109,10 @@ const PlantCard: React.FC<PlantCardProps> = ({ plant }) => {
           </div>
         )}
 
-        {/* "Needs water" badge - only shown when overdue */}
-        {needsWater && (
-          <span className={styles.waterBadge}>
-            <Droplets size={14} />
-            Necesita agua
-          </span>
-        )}
+        {/* Watering status badge - always shown with urgency color */}
+        <span className={`${styles.waterBadge} ${getBadgeClass(urgency)}`}>
+          {getBadgeText(urgency)}
+        </span>
       </div>
 
       {/* Plant info */}

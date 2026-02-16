@@ -48,8 +48,14 @@
   animation: spin 1.5s linear infinite;
 }
 
-/* Header */
+/* ─── Header ─── */
 .header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.headerTop {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,9 +67,32 @@
   color: var(--color-text);
 }
 
+.location {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  background-color: rgba(0, 0, 0, 0.04);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
 .subtitle {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
+}
+
+/* ─── Fade-in animation for grid ─── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive plant grid */
@@ -71,54 +100,35 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--space-md);
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* Floating Action Button */
+/* ─── Floating Action Button ─── */
 .fab {
   position: fixed;
-  bottom: calc(var(--nav-height) + var(--space-md));
+  bottom: calc(var(--nav-height) + var(--space-lg));
   right: var(--space-md);
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: var(--radius-full);
-  background-color: var(--color-primary);
+  background-color: #10B981;
   color: white;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.35);
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 50;
 }
 
 .fab:hover {
-  background-color: var(--color-primary-light);
+  background-color: #059669;
+  transform: scale(1.08);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
 }
 
 .fab:active {
-  transform: scale(0.93);
-}
-
-/* Development tools - temporary, remove in production */
-.devTools {
-  display: flex;
-  justify-content: center;
-  padding: var(--space-md);
-}
-
-.devButton {
-  background-color: transparent;
-  color: var(--color-text-secondary);
-  border: 1px dashed var(--color-text-secondary);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm) var(--space-md);
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.devButton:hover {
-  opacity: 0.7;
+  transform: scale(0.95);
 }

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from '@/db/database';
 import { compressImage } from '@/utils/imageUtils';
 import { generateId } from '@/utils/generateId';
+import { identifyPlant, type PlantIdentification } from '@/services/plantIdentification';
 import type { Plant } from '@/types';
 
 /**
@@ -13,6 +14,7 @@ import type { Plant } from '@/types';
  *   - What values are in each field (state)
  *   - Which fields have errors (validation)
  *   - Processing the photo (compression)
+ *   - AI plant identification (NEW!)
  *   - Saving to the database (submission)
  *
  * The page component (AddPlantPage.tsx) only handles the "body":
@@ -27,19 +29,30 @@ import type { Plant } from '@/types';
  * the user has interacted with ("touched"). Errors only appear for
  * touched fields. When the user clicks "Submit", we mark ALL fields
  * as touched so any remaining errors become visible.
+ *
+ * AI IDENTIFICATION (NEW):
+ * After taking a photo, the user can click "Identificar con IA" to
+ * have Claude Vision analyze the image and automatically fill in
+ * the type and species fields. The identification includes a
+ * confidence level (alta/media/baja) shown as a badge.
  */
 
-// Available plant types for the dropdown
+// Available plant types for the dropdown (sorted alphabetically, "Otro" at end)
 export const PLANT_TYPES: readonly string[] = [
-  'Suculenta',
-  'Cactus',
-  'Hortaliza',
-  'Hierba aromatica',
   'Arbol frutal',
-  'Planta de flor',
-  'Helecho',
-  'Trepadora',
   'Arbusto',
+  'Cactus',
+  'Carnivora',
+  'Helecho',
+  'Herbacea perenne',
+  'Hierba aromatica',
+  'Hortaliza',
+  'Orquidea',
+  'Palmera',
+  'Planta de flor',
+  'Planta de interior',
+  'Suculenta',
+  'Trepadora',
   'Otro',
 ] as const;
 
@@ -66,6 +79,12 @@ export interface UseAddPlantResult {
   formState: AddPlantFormState;
   errors: AddPlantFormErrors;
   isSubmitting: boolean;
+  // AI Identification (NEW)
+  isIdentifying: boolean;
+  identificationResult: PlantIdentification | null;
+  identificationError: string | null;
+  handleIdentifyPlant: () => Promise<void>;
+  // Form handlers
   handlePhotoChange: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleTypeChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   handleSpeciesChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -145,6 +164,11 @@ export function useAddPlant(): UseAddPlantResult {
   // Prevents double-submission while saving
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
+  // ─── AI Identification State (NEW) ───
+  const [isIdentifying, setIsIdentifying] = useState<boolean>(false);
+  const [identificationResult, setIdentificationResult] = useState<PlantIdentification | null>(null);
+  const [identificationError, setIdentificationError] = useState<string | null>(null);
+
   // Calculate errors (runs on every render, but it's a cheap operation)
   const allErrors = validate(formState);
   const visibleErrors = getVisibleErrors(allErrors, touched);
@@ -167,6 +191,10 @@ export function useAddPlant(): UseAddPlantResult {
 
     setTouched((prev) => ({ ...prev, photoURL: true }));
 
+    // Clear previous identification when photo changes
+    setIdentificationResult(null);
+    setIdentificationError(null);
+
     try {
       const base64 = await compressImage(file);
       setFormState((prev) => ({ ...prev, photoURL: base64 }));
@@ -175,6 +203,42 @@ export function useAddPlant(): UseAddPlantResult {
       setFormState((prev) => ({ ...prev, photoURL: '' }));
     }
   };
+
+  /**
+   * Identify the plant using Claude Vision API.
+   * This auto-fills the type and species fields.
+   */
+  const handleIdentifyPlant = useCallback(async (): Promise<void> => {
+    // Guard: need a photo and not already identifying
+    if (!formState.photoURL || isIdentifying) return;
+
+    setIsIdentifying(true);
+    setIdentificationError(null);
+
+    try {
+      const result = await identifyPlant(formState.photoURL);
+      setIdentificationResult(result);
+
+      // Auto-fill the form fields
+      setFormState((prev) => ({
+        ...prev,
+        type: result.type,
+        species: result.species,
+      }));
+
+      // Mark type as touched since it's been filled
+      setTouched((prev) => ({ ...prev, type: true }));
+    } catch (error) {
+      console.error('Error identifying plant:', error);
+      setIdentificationError(
+        error instanceof Error
+          ? error.message
+          : 'No pudimos identificar la planta. Introdúcela manualmente',
+      );
+    } finally {
+      setIsIdentifying(false);
+    }
+  }, [formState.photoURL, isIdentifying]);
 
   const handleTypeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -247,6 +311,12 @@ export function useAddPlant(): UseAddPlantResult {
     formState,
     errors: visibleErrors,
     isSubmitting,
+    // AI Identification (NEW)
+    isIdentifying,
+    identificationResult,
+    identificationError,
+    handleIdentifyPlant,
+    // Form handlers
     handlePhotoChange,
     handleTypeChange,
     handleSpeciesChange,

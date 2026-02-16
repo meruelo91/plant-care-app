@@ -21,15 +21,22 @@
   min-height: 60vh; /* Take up most of the screen */
 }
 
+/* Floating animation for the icon */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
 .iconWrapper {
   color: var(--color-accent);
-  margin-bottom: var(--space-lg);
-  opacity: 0.7;
+  margin-bottom: var(--space-xl);
+  opacity: 0.85;
+  animation: float 3s ease-in-out infinite;
 }
 
 .title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
   margin-bottom: var(--space-sm);
 }
@@ -39,23 +46,26 @@
   color: var(--color-text-secondary);
   margin-bottom: var(--space-xl);
   max-width: 300px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .actionButton {
-  background-color: var(--color-primary);
+  background-color: #10B981;
   color: white;
   border: none;
   border-radius: var(--radius-full);
   padding: var(--space-md) var(--space-xl);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .actionButton:hover {
-  background-color: var(--color-primary-light);
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
 .actionButton:active {

@@ -6,20 +6,21 @@
  * - aspect-ratio on image: consistent height regardless of photo size
  * - transition on hover: subtle feedback that the card is interactive
  * - overflow:hidden on card: image corners follow the card's border-radius
+ * - Urgency-based badges: red (urgent), orange (warning), green (ok)
  */
 
 .card {
   background-color: var(--color-bg-card);
-  border-radius: var(--radius-md);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
 }
 
 .card:active {
@@ -32,11 +33,16 @@
   outline-offset: 2px;
 }
 
-/* Image area */
+/* Urgent plants get a subtle red border */
+.cardUrgent {
+  border: 2px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Image area - larger for more visual impact */
 .imageContainer {
   position: relative; /* For positioning the water badge */
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2; /* Taller than before for more photo prominence */
   overflow: hidden;
   background-color: #E8F5E9;
 }
@@ -58,32 +64,53 @@
   opacity: 0.5;
 }
 
-/* "Needs water" badge - floats over the image */
+/* ─── Water Badge Base ─── */
 .waterBadge {
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
-  background-color: var(--color-warning);
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 2px var(--space-sm);
+  padding: 4px var(--space-sm);
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-/* Plant info section */
+/* ─── Urgency-based badge colors ─── */
+
+/* Pulsing animation for urgent badge */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+
+.badgeUrgent {
+  background-color: #EF4444;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.badgeWarning {
+  background-color: #F59E0B;
+}
+
+.badgeOk {
+  background-color: #10B981;
+  opacity: 0.9;
+}
+
+/* ─── Plant info section ─── */
 .info {
   padding: var(--space-md);
 }
 
 .name {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--color-text);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .species {

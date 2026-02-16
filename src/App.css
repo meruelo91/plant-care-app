@@ -1,0 +1,32 @@
+/*
+ * App-level styles
+ *
+ * Contains styles for:
+ *   - Page transitions (fade effect when navigating)
+ *   - Active navigation link styling
+ */
+
+/* ─── Page Transitions ─── */
+.page-transition {
+  animation: pageEnter 0.25s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Active Navigation Link ─── */
+.nav-link-active {
+  color: var(--color-primary) !important;
+}
+
+.nav-link-active svg {
+  color: var(--color-primary);
+}

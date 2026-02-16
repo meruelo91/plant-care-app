@@ -264,3 +264,85 @@
 .spinner {
   animation: spin 1.5s linear infinite;
 }
+
+/* ─── AI Identification Section ─── */
+
+/* Botón de identificación con IA - color púrpura para distinguirlo */
+.identifyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background-color: #8B5CF6;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: var(--space-sm);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.identifyButton:hover {
+  background-color: #7C3AED;
+}
+
+.identifyButton:active {
+  transform: scale(0.98);
+}
+
+/* Estado de carga durante identificación */
+.identifyingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  color: #8B5CF6;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) 0;
+}
+
+/* Error de identificación */
+.identifyError {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background-color: rgba(230, 57, 70, 0.08);
+  border-radius: var(--radius-sm);
+}
+
+/* Badge de confianza después de identificación */
+.confidenceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: var(--space-sm);
+}
+
+.confidenceBadge[data-confidence="alta"] {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.confidenceBadge[data-confidence="media"] {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.confidenceBadge[data-confidence="baja"] {
+  background-color: #FEE2E2;
+  color: #991B1B;
+}

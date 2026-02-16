@@ -42,8 +42,8 @@ export default defineConfig({
         name: 'Plant Care',
         short_name: 'PlantCare',
         description: 'Cuida tus plantas con recordatorios inteligentes',
-        theme_color: '#2D6A4F',
-        background_color: '#F0FFF4',
+        theme_color: '#10B981',
+        background_color: '#FFFFFF',
         display: 'standalone', // Hides browser UI when installed
         scope: '/',
         start_url: '/',

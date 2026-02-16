@@ -1,0 +1,88 @@
+/*
+ * Toast notification styles
+ *
+ * Positioned at the bottom of the screen with a slide-up animation.
+ * Color variants for success (green), error (red), and info (blue).
+ */
+
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--space-lg));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 200;
+  animation: slideUp 0.3s ease-out;
+  max-width: calc(100vw - 32px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.message {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  padding: 4px;
+  margin-left: var(--space-sm);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Variants ─── */
+
+.success {
+  border-left: 4px solid #10B981;
+}
+
+.success .icon {
+  color: #10B981;
+}
+
+.error {
+  border-left: 4px solid #EF4444;
+}
+
+.error .icon {
+  color: #EF4444;
+}
+
+.info {
+  border-left: 4px solid #3B82F6;
+}
+
+.info .icon {
+  color: #3B82F6;
+}

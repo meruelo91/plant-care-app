@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Camera, Leaf, Loader, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Camera, Leaf, Loader, AlertCircle, Sparkles } from 'lucide-react';
 import { useAddPlant, PLANT_TYPES } from '@/hooks/useAddPlant';
 import styles from './AddPlantPage.module.css';
 
@@ -42,6 +42,12 @@ const AddPlantPage: React.FC = () => {
     formState,
     errors,
     isSubmitting,
+    // AI Identification
+    isIdentifying,
+    identificationResult,
+    identificationError,
+    handleIdentifyPlant,
+    // Form handlers
     handlePhotoChange,
     handleTypeChange,
     handleSpeciesChange,
@@ -125,6 +131,46 @@ const AddPlantPage: React.FC = () => {
               <AlertCircle size={14} />
               {errors.photoURL}
             </p>
+          )}
+
+          {/* AI Identification Button - shows after photo is taken */}
+          {formState.photoURL && !isIdentifying && !identificationResult && (
+            <button
+              type="button"
+              className={styles.identifyButton}
+              onClick={handleIdentifyPlant}
+            >
+              <Sparkles size={18} />
+              Identificar con IA
+            </button>
+          )}
+
+          {/* Loading state while identifying */}
+          {isIdentifying && (
+            <div className={styles.identifyingState}>
+              <Loader size={18} className={styles.spinner} />
+              Analizando imagen...
+            </div>
+          )}
+
+          {/* Identification error */}
+          {identificationError && (
+            <p className={styles.identifyError}>
+              <AlertCircle size={14} />
+              {identificationError}
+            </p>
+          )}
+
+          {/* Confidence badge after successful identification */}
+          {identificationResult && (
+            <div
+              className={styles.confidenceBadge}
+              data-confidence={identificationResult.confidence}
+            >
+              {identificationResult.confidence === 'alta' && '✓ Identificada con alta confianza'}
+              {identificationResult.confidence === 'media' && '⚠️ Verificar identificación'}
+              {identificationResult.confidence === 'baja' && '❓ Identificación incierta, revisa'}
+            </div>
           )}
         </div>
 

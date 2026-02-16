@@ -1,12 +1,15 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Home, Plus, Settings } from 'lucide-react';
 import { useUserSettings } from '@/hooks/useUserSettings';
 import { useNotificationScheduler } from '@/hooks/useNotificationScheduler';
+import { ToastProvider } from '@/contexts/ToastContext';
+import SplashScreen from '@/components/common/SplashScreen';
 import OnboardingPage from '@/pages/OnboardingPage';
 import HomePage from '@/pages/HomePage';
 import AddPlantPage from '@/pages/AddPlantPage';
 import PlantDetailPage from '@/pages/PlantDetailPage';
 import SettingsPage from '@/pages/SettingsPage';
+import './App.css';
 
 /**
  * App - Root component with conditional rendering + routing.
@@ -18,28 +21,62 @@ import SettingsPage from '@/pages/SettingsPage';
  *
  * How it works:
  *   1. useUserSettings reads from IndexedDB (reactive via useLiveQuery)
- *   2. While loading → show a simple loading screen
+ *   2. While loading → show animated SplashScreen
  *   3. If onboarding NOT completed → show OnboardingPage (no routes, no nav)
  *   4. If onboarding completed → show the normal app with routing + nav
  *
- * WHY NOT A ROUTE?
- * The onboarding is NOT a route (like /onboarding) because:
- *   - Users could bookmark it and get confused later
- *   - The URL bar would show /onboarding on fresh installs
- *   - It's simpler: either you see the onboarding OR the app, never both
- *
- * REACTIVITY:
- * When the onboarding saves settings to IndexedDB, useUserSettings
- * automatically re-renders this component (thanks to useLiveQuery).
- * The transition from onboarding to main app happens seamlessly
- * without manual state updates or page reloads.
- *
- * ROUTING CONCEPTS:
- * - BrowserRouter: Wraps the app to enable URL-based navigation
- * - Routes: Container for all route definitions
- * - Route: Maps a URL path to a component
- * - Link: Navigation without page reload (unlike <a> tags)
+ * TOAST NOTIFICATIONS:
+ * The ToastProvider wraps the app to enable toast notifications
+ * from any component using the useToast() hook.
  */
+
+/**
+ * NavLink - Navigation link with active state styling.
+ */
+const NavLink: React.FC<{ to: string; icon: React.ReactNode; label: string }> = ({
+  to,
+  icon,
+  label,
+}) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
+  return (
+    <Link to={to} className={`nav-link ${isActive ? 'nav-link-active' : ''}`}>
+      {icon}
+      <span>{label}</span>
+    </Link>
+  );
+};
+
+/**
+ * AppContent - Main app content with routing and navigation.
+ * Separated to use useLocation hook (requires BrowserRouter context).
+ */
+const AppContent: React.FC = () => {
+  return (
+    <div className="app">
+      <main className="app-main">
+        <div className="page-transition">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/add" element={<AddPlantPage />} />
+            <Route path="/plant/:id" element={<PlantDetailPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+          </Routes>
+        </div>
+      </main>
+
+      {/* Bottom navigation bar - common pattern in mobile apps */}
+      <nav className="app-nav">
+        <NavLink to="/" icon={<Home size={24} />} label="Jardín" />
+        <NavLink to="/add" icon={<Plus size={24} />} label="Agregar" />
+        <NavLink to="/settings" icon={<Settings size={24} />} label="Ajustes" />
+      </nav>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const { isLoading, isOnboardingCompleted } = useUserSettings();
 
@@ -49,57 +86,29 @@ const App: React.FC = () => {
   useNotificationScheduler();
 
   // ─── Loading state ───
-  // Show a minimal loading screen while IndexedDB is being read.
-  // This prevents a flash of the onboarding screen for returning users.
+  // Show animated splash screen while IndexedDB is being read.
+  // This creates a polished first impression.
   if (isLoading) {
-    return (
-      <div className="app" style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100dvh',
-      }}>
-        <span style={{ fontSize: '2.5rem' }}>🌱</span>
-      </div>
-    );
+    return <SplashScreen />;
   }
 
   // ─── Onboarding ───
   // First-time users see the location setup screen.
   // No routing, no bottom nav — just the onboarding.
   if (!isOnboardingCompleted) {
-    return <OnboardingPage />;
+    return (
+      <ToastProvider>
+        <OnboardingPage />
+      </ToastProvider>
+    );
   }
 
   // ─── Main app ───
   return (
     <BrowserRouter>
-      <div className="app">
-        <main className="app-main">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/add" element={<AddPlantPage />} />
-            <Route path="/plant/:id" element={<PlantDetailPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
-
-        {/* Bottom navigation bar - common pattern in mobile apps */}
-        <nav className="app-nav">
-          <Link to="/" className="nav-link">
-            <Home size={24} />
-            <span>Jardín</span>
-          </Link>
-          <Link to="/add" className="nav-link">
-            <Plus size={24} />
-            <span>Agregar</span>
-          </Link>
-          <Link to="/settings" className="nav-link">
-            <Settings size={24} />
-            <span>Ajustes</span>
-          </Link>
-        </nav>
-      </div>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </BrowserRouter>
   );
 };

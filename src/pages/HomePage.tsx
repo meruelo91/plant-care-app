@@ -1,15 +1,17 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sprout, Plus, Loader } from 'lucide-react';
+import { Sprout, Plus, Loader, MapPin } from 'lucide-react';
 import { usePlants } from '@/hooks/usePlants';
-import { seedMockPlants } from '@/db/seedData';
+import { useUserSettings } from '@/hooks/useUserSettings';
+import { getWateringUrgency } from '@/utils/watering';
 import PlantCard from '@/components/plants/PlantCard';
 import EmptyState from '@/components/common/EmptyState';
 import styles from './HomePage.module.css';
 
 /**
- * HomePage - "Mi Jardin" screen.
+ * HomePage - "Mis Plantas" screen.
  *
- * This page demonstrates three important React patterns:
+ * This page demonstrates several important React patterns:
  *
  * 1. CONDITIONAL RENDERING:
  *    Based on the data state (loading / empty / has plants),
@@ -23,26 +25,35 @@ import styles from './HomePage.module.css';
  *    plants.map() creates one PlantCard per plant.
  *    The `key` prop is crucial - React uses it to efficiently
  *    update only the cards that changed instead of re-rendering all.
+ *
+ * 4. SORTED BY URGENCY:
+ *    Plants are sorted so urgent ones (needing water) appear first.
+ *    useMemo prevents re-sorting on every render.
  */
 
 const HomePage: React.FC = () => {
   const { plants, isLoading } = usePlants();
+  const { settings } = useUserSettings();
   const navigate = useNavigate();
 
   const handleAddPlant = (): void => {
     navigate('/add');
   };
 
-  const handleSeedData = async (): Promise<void> => {
-    await seedMockPlants();
-  };
+  // Sort plants by urgency: urgent first, then warning, then ok
+  const sortedPlants = useMemo(() => {
+    const urgencyOrder = { urgent: 0, warning: 1, ok: 2 };
+    return [...plants].sort(
+      (a, b) => urgencyOrder[getWateringUrgency(a)] - urgencyOrder[getWateringUrgency(b)]
+    );
+  }, [plants]);
 
   // Loading state: show while Dexie reads from IndexedDB
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
         <Loader size={32} className={styles.spinner} />
-        <p>Cargando tu jardin...</p>
+        <p>Cargando tu jardín...</p>
       </div>
     );
   }
@@ -52,23 +63,12 @@ const HomePage: React.FC = () => {
     return (
       <div className={styles.page}>
         <EmptyState
-          icon={<Sprout size={64} />}
-          title="Tu jardin esta vacio"
-          message="Agrega tu primera planta y empieza a cuidar tu jardin."
-          actionLabel="+ Agregar mi primera planta"
+          icon={<Sprout size={80} />}
+          title="Empieza tu jardín digital"
+          message="Añade tu primera planta y nunca olvides regarla"
+          actionLabel="🌱 Añadir mi primera planta"
           onAction={handleAddPlant}
         />
-
-        {/* Temporary button for development - remove in production */}
-        <div className={styles.devTools}>
-          <button
-            type="button"
-            className={styles.devButton}
-            onClick={handleSeedData}
-          >
-            Cargar datos de prueba
-          </button>
-        </div>
       </div>
     );
   }
@@ -78,17 +78,23 @@ const HomePage: React.FC = () => {
     <div className={styles.page}>
       {/* Header */}
       <header className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Mi Jardin</h1>
-          <p className={styles.subtitle}>
-            {plants.length} {plants.length === 1 ? 'planta' : 'plantas'}
-          </p>
+        <div className={styles.headerTop}>
+          <h1 className={styles.title}>🌱 Mis Plantas</h1>
+          {settings?.location?.city && (
+            <span className={styles.location}>
+              <MapPin size={14} />
+              {settings.location.city}
+            </span>
+          )}
         </div>
+        <p className={styles.subtitle}>
+          {plants.length} {plants.length === 1 ? 'planta' : 'plantas'}
+        </p>
       </header>
 
-      {/* Plant grid */}
+      {/* Plant grid - sorted by urgency */}
       <div className={styles.grid}>
-        {plants.map((plant) => (
+        {sortedPlants.map((plant) => (
           <PlantCard key={plant.id} plant={plant} />
         ))}
       </div>
@@ -102,17 +108,6 @@ const HomePage: React.FC = () => {
       >
         <Plus size={28} />
       </button>
-
-      {/* Temporary button for development - remove in production */}
-      <div className={styles.devTools}>
-        <button
-          type="button"
-          className={styles.devButton}
-          onClick={handleSeedData}
-        >
-          Cargar datos de prueba
-        </button>
-      </div>
     </div>
   );
 };
