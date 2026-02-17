@@ -202,6 +202,17 @@
   color: var(--color-danger);
 }
 
+/* Group of buttons on the right (edit + delete) */
+.floatingButtonsRight {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Edit button - blue color */
+.editButton {
+  color: #3B82F6;
+}
+
 /* ─── Content Card ─── */
 
 /*

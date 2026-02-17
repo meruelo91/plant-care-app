@@ -346,3 +346,63 @@
   background-color: #FEE2E2;
   color: #991B1B;
 }
+
+/* ─── Loading and Not Found States (for EditPlantPage) ─── */
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  min-height: 50vh;
+  color: var(--color-text-secondary);
+}
+
+.notFoundContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  min-height: 50vh;
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+.notFoundIcon {
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+}
+
+.notFoundTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.notFoundMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  max-width: 280px;
+}
+
+.backButtonLarge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: var(--space-sm);
+  transition: background-color 0.2s ease;
+}
+
+.backButtonLarge:hover {
+  background-color: var(--color-primary-dark);
+}

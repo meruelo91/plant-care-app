@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Trash2,
+  Pencil,
   Flower2,
   Droplets,
   Leaf,
@@ -168,7 +169,7 @@ const PlantDetailPage: React.FC = () => {
         {/* Dark gradient overlay so buttons are visible on light photos */}
         <div className={styles.heroOverlay} />
 
-        {/* Floating buttons: Back (left) and Delete (right) */}
+        {/* Floating buttons: Back (left) and Edit/Delete (right) */}
         <div className={styles.floatingButtons}>
           <button
             type="button"
@@ -178,14 +179,24 @@ const PlantDetailPage: React.FC = () => {
           >
             <ArrowLeft size={20} />
           </button>
-          <button
-            type="button"
-            className={`${styles.floatingButton} ${styles.deleteButton}`}
-            onClick={() => setShowDeleteModal(true)}
-            aria-label="Eliminar planta"
-          >
-            <Trash2 size={20} />
-          </button>
+          <div className={styles.floatingButtonsRight}>
+            <button
+              type="button"
+              className={`${styles.floatingButton} ${styles.editButton}`}
+              onClick={() => navigate(`/plant/${id}/edit`)}
+              aria-label="Editar planta"
+            >
+              <Pencil size={20} />
+            </button>
+            <button
+              type="button"
+              className={`${styles.floatingButton} ${styles.deleteButton}`}
+              onClick={() => setShowDeleteModal(true)}
+              aria-label="Eliminar planta"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
         </div>
       </div>
 

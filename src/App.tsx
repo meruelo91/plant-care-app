@@ -7,6 +7,7 @@ import SplashScreen from '@/components/common/SplashScreen';
 import OnboardingPage from '@/pages/OnboardingPage';
 import HomePage from '@/pages/HomePage';
 import AddPlantPage from '@/pages/AddPlantPage';
+import EditPlantPage from '@/pages/EditPlantPage';
 import PlantDetailPage from '@/pages/PlantDetailPage';
 import SettingsPage from '@/pages/SettingsPage';
 import './App.css';
@@ -62,6 +63,7 @@ const AppContent: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/add" element={<AddPlantPage />} />
             <Route path="/plant/:id" element={<PlantDetailPage />} />
+            <Route path="/plant/:id/edit" element={<EditPlantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </div>
