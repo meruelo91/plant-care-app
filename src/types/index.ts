@@ -119,3 +119,59 @@ export interface PlantWateringAdvice {
   location: string;       // "Valencia, España" or just "México"
   isFallback?: boolean;   // true if advice came from hardcoded fallback (no API)
 }
+
+// ============================================
+// FILTER & SEARCH TYPES
+// ============================================
+
+/**
+ * Options for filtering and sorting the plant list.
+ * Used by useFilteredPlants hook to manage filter state.
+ *
+ * searchTerm: NOT persisted (starts empty on each session)
+ * Other options: persisted in localStorage
+ */
+export interface PlantFilterOptions {
+  searchTerm: string;
+  wateringStatus: WateringStatusFilter;
+  plantType: string | null; // null = show all types
+  sortBy: PlantSortOption;
+}
+
+/**
+ * Filter plants by their watering urgency.
+ * Maps to getWateringUrgency() return values from watering.ts
+ */
+export type WateringStatusFilter =
+  | 'all'         // Show all plants
+  | 'needs_water' // Urgent - need watering soon
+  | 'ok'          // Watered recently, all good
+  | 'no_data';    // No watering history yet
+
+/**
+ * Sort options for the plant list.
+ * Default is 'next_watering' (most urgent first)
+ */
+export type PlantSortOption =
+  | 'next_watering'  // By urgency (default)
+  | 'alphabetical'   // A-Z by display name
+  | 'newest'         // Most recently added
+  | 'last_watered';  // Most recently watered
+
+/**
+ * Represents a single active filter chip in the UI.
+ * Used by FilterChips component to render removable pills.
+ */
+export interface FilterChipData {
+  key: string;    // Unique identifier for removal
+  label: string;  // Display text (e.g., "Necesitan agua")
+}
+
+/**
+ * Summary of currently active filters.
+ * Used to show badge count and chip list in UI.
+ */
+export interface ActiveFilters {
+  count: number;           // Number of active filters (for badge)
+  chips: FilterChipData[]; // List of chips to display
+}

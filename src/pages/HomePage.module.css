@@ -136,3 +136,100 @@
 .fab:active {
   transform: scale(0.95);
 }
+
+/* ─── Search & Filter Row ─── */
+.searchRow {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  background-color: var(--color-bg-card);
+  border: 1px solid #E5E7EB;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filterBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Results Count ─── */
+.resultsCount {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: calc(-1 * var(--space-sm));
+}
+
+/* ─── No Results State ─── */
+.noResults {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  min-height: 40vh;
+}
+
+.noResultsIcon {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.noResultsTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.noResultsMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.clearFiltersButton {
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.clearFiltersButton:hover {
+  opacity: 0.85;
+}

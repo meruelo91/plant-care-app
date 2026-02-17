@@ -1,0 +1,247 @@
+/**
+ * FilterPanel styles
+ *
+ * Bottom drawer pattern for mobile-first UX.
+ * Slides up from the bottom of the screen.
+ */
+
+/* Dark overlay behind the panel */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The panel itself - slides up from bottom */
+.panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 85vh;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.25s ease;
+  /* Safe area for devices with home indicator */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header with title and close button */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid #E5E7EB;
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text);
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: #F3F4F6;
+}
+
+/* Scrollable content area */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+}
+
+/* Section styling */
+.section {
+  margin-bottom: var(--space-lg);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 var(--space-sm) 0;
+}
+
+/* Watering status options - 2x2 grid */
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: #F3F4F6;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.optionButton:hover {
+  background-color: #E5E7EB;
+}
+
+.optionSelected {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.optionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionLabel {
+  font-weight: 500;
+}
+
+/* Plant type options - wrapping chips */
+.optionWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.typeChip {
+  padding: var(--space-xs) var(--space-sm);
+  background-color: #F3F4F6;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.typeChip:hover {
+  background-color: #E5E7EB;
+}
+
+.typeChipSelected {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+/* Sort options - horizontal list */
+.sortOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.sortButton {
+  padding: var(--space-sm) var(--space-md);
+  background-color: #F3F4F6;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sortButton:hover {
+  background-color: #E5E7EB;
+}
+
+.sortSelected {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+/* Footer with action buttons */
+.footer {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-top: 1px solid #E5E7EB;
+  flex-shrink: 0;
+}
+
+.clearButton,
+.applyButton {
+  flex: 1;
+  min-height: 48px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.clearButton:hover,
+.applyButton:hover {
+  opacity: 0.85;
+}
+
+.clearButton {
+  background-color: #F3F4F6;
+  color: var(--color-text);
+}
+
+.applyButton {
+  background-color: var(--color-primary);
+  color: white;
+}
