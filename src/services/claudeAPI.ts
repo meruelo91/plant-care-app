@@ -70,7 +70,7 @@ const IS_PRODUCTION: boolean = import.meta.env.PROD;
 const PRODUCTION_API_URL = '/.netlify/functions/generate-advice';
 const DEVELOPMENT_API_URL = '/api/anthropic/v1/messages';
 
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 500;
 const ANTHROPIC_VERSION = '2023-06-01';
 
