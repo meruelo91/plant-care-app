@@ -26,6 +26,14 @@ const DEFAULT_FREQUENCY_DAYS = 7;
 /** Icon path for notifications (relative to public folder) */
 const NOTIFICATION_ICON = '/icons/icon-192x192.png';
 
+/**
+ * How many hours after the scheduled time we still allow sending.
+ * Prevents firing the notification when the user opens the app
+ * hours after the scheduled time (e.g., notification at 9:00,
+ * user opens app at 22:00 → don't fire).
+ */
+const NOTIFICATION_WINDOW_HOURS = 3;
+
 // ─── Types ───
 
 export interface PlantNeedingWater {
@@ -188,6 +196,17 @@ export function shouldSendNotification(settings: UserSettings): boolean {
 
   // Compare strings: "09:15" >= "09:00" means it's time
   if (currentTimeStr < settings.notificationTime) {
+    return false;
+  }
+
+  // Check 3b: Time window - don't fire if too many hours have passed.
+  // This prevents the notification from triggering when the user opens the app
+  // late in the day (e.g., notification at 09:00, app opened at 22:00).
+  const [notifHour, notifMinute] = settings.notificationTime.split(':').map(Number);
+  const scheduledToday = new Date(now);
+  scheduledToday.setHours(notifHour, notifMinute, 0, 0);
+  const hoursSinceScheduled = (now.getTime() - scheduledToday.getTime()) / (1000 * 60 * 60);
+  if (hoursSinceScheduled > NOTIFICATION_WINDOW_HOURS) {
     return false;
   }
 

@@ -90,10 +90,12 @@ export function useNotificationScheduler(): void {
       }
     };
 
-    // Run immediately on mount (in case app opens after notification time)
-    checkAndNotify();
-
-    // Then run every minute
+    // Run every minute. We intentionally do NOT call checkAndNotify()
+    // immediately on mount — shouldSendNotification has a NOTIFICATION_WINDOW_HOURS
+    // guard, so firing at mount would send the notification as soon as the user
+    // opens the app within that window, which feels like a bug. Instead we wait
+    // for the first interval tick (up to 1 minute) so the notification fires
+    // "in the background" while the app is open, not the moment it launches.
     intervalRef.current = setInterval(checkAndNotify, CHECK_INTERVAL_MS);
 
     // Cleanup on unmount
