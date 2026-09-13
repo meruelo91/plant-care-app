@@ -241,16 +241,19 @@ async function identifyPlantProduction(
     if (response.status === 429) {
       throw new Error('Demasiadas peticiones. Espera un momento e intenta de nuevo');
     }
-    // Try to get error message from response
+    // Try to get the specific error message the server sent us.
+    // NOTE: we must not throw from inside the try — the catch below would
+    // swallow it and we'd always fall through to the generic message.
+    let serverError: string | null = null;
     try {
       const errorData = await response.json() as { error?: string };
-      if (errorData.error) {
-        throw new Error(errorData.error);
-      }
+      serverError = errorData.error ?? null;
     } catch {
-      // Ignore JSON parse errors
+      // Response wasn't JSON — fall back to the generic message
     }
-    throw new Error('No pudimos identificar la planta. Introdúcela manualmente');
+    throw new Error(
+      serverError ?? 'No pudimos identificar la planta. Introdúcela manualmente',
+    );
   }
 
   const data: ServerlessResponse = await response.json();

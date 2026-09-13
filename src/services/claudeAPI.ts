@@ -159,16 +159,19 @@ async function generateAdviceProduction(
       throw new Error('Demasiadas peticiones. Espera un momento e intenta de nuevo');
     }
     if (response.status === 500) {
-      // Try to get error message from response
+      // Try to get the specific error message the server sent us.
+      // NOTE: we must not throw from inside the try — the catch below would
+      // swallow it and we'd always fall through to the generic message.
+      let serverError: string | null = null;
       try {
         const errorData = await response.json() as { error?: string };
-        if (errorData.error) {
-          throw new Error(errorData.error);
-        }
+        serverError = errorData.error ?? null;
       } catch {
-        // Ignore JSON parse errors, fall through to generic error
+        // Response wasn't JSON — fall back to the generic message
       }
-      throw new Error('El servicio de IA no está disponible. Intenta más tarde');
+      throw new Error(
+        serverError ?? 'El servicio de IA no está disponible. Intenta más tarde',
+      );
     }
     throw new Error(`Error del servidor (${response.status}). Intenta más tarde`);
   }
