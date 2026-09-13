@@ -1,4 +1,9 @@
 import type { Handler, HandlerEvent, HandlerResponse } from '@netlify/functions';
+import {
+  CLAUDE_MODEL,
+  ANTHROPIC_VERSION,
+  ANTHROPIC_API_URL,
+} from '../../shared/anthropic';
 
 /**
  * Netlify Serverless Function: Identify Plant with Claude Vision
@@ -19,10 +24,7 @@ import type { Handler, HandlerEvent, HandlerResponse } from '@netlify/functions'
 
 // ─── Constants ───
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 200;
-const ANTHROPIC_VERSION = '2023-06-01';
 
 // Valid plant types (must match frontend PLANT_TYPES - sorted alphabetically, "Otro" at end)
 const VALID_PLANT_TYPES = [
@@ -284,7 +286,7 @@ const handler: Handler = async (event: HandlerEvent): Promise<HandlerResponse> =
         'anthropic-version': ANTHROPIC_VERSION,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: CLAUDE_MODEL,
         max_tokens: MAX_TOKENS,
         messages: [
           {

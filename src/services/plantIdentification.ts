@@ -11,6 +11,8 @@
  * The serverless function keeps the API key secure on the server.
  */
 
+import { CLAUDE_MODEL, ANTHROPIC_VERSION } from '../../shared/anthropic';
+
 // ─── Types ───
 
 export interface PlantIdentification {
@@ -39,9 +41,7 @@ const IS_PRODUCTION: boolean = import.meta.env.PROD;
 const PRODUCTION_API_URL = '/.netlify/functions/identify-plant';
 const DEVELOPMENT_API_URL = '/api/anthropic/v1/messages';
 
-const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 200;
-const ANTHROPIC_VERSION = '2023-06-01';
 
 // Valid plant types (must match serverless function - sorted alphabetically, "Otro" at end)
 const VALID_PLANT_TYPES = [
@@ -292,7 +292,7 @@ async function identifyPlantDevelopment(
       'anthropic-version': ANTHROPIC_VERSION,
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: CLAUDE_MODEL,
       max_tokens: MAX_TOKENS,
       messages: [
         {

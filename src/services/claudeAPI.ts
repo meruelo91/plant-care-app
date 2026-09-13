@@ -1,5 +1,6 @@
 import type { WateringAdvice } from '@/types';
 import { getCurrentSeason } from '@/utils/seasons';
+import { CLAUDE_MODEL, ANTHROPIC_VERSION } from '../../shared/anthropic';
 
 /**
  * Claude API service for generating AI watering advice.
@@ -70,9 +71,7 @@ const IS_PRODUCTION: boolean = import.meta.env.PROD;
 const PRODUCTION_API_URL = '/.netlify/functions/generate-advice';
 const DEVELOPMENT_API_URL = '/api/anthropic/v1/messages';
 
-const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 500;
-const ANTHROPIC_VERSION = '2023-06-01';
 
 /**
  * System prompt that tells Claude HOW to respond.
@@ -261,7 +260,7 @@ async function generateAdviceDevelopment(
       'anthropic-version': ANTHROPIC_VERSION,
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: CLAUDE_MODEL,
       max_tokens: MAX_TOKENS,
       system: SYSTEM_PROMPT,
       messages: [

@@ -1,4 +1,9 @@
 import type { Handler, HandlerEvent, HandlerResponse } from '@netlify/functions';
+import {
+  CLAUDE_MODEL,
+  ANTHROPIC_VERSION,
+  ANTHROPIC_API_URL,
+} from '../../shared/anthropic';
 
 /**
  * Netlify Serverless Function: generate-advice
@@ -37,10 +42,7 @@ interface AnthropicResponse {
 
 // ─── Constants ───
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-sonnet-4-6';
 const MAX_TOKENS = 500;
-const ANTHROPIC_VERSION = '2023-06-01';
 
 const SYSTEM_PROMPT = `Eres un experto en jardinería. Respondes SOLO con JSON puro (sin markdown, sin \`\`\`, sin texto extra).
 
@@ -127,7 +129,7 @@ const handler: Handler = async (event: HandlerEvent): Promise<HandlerResponse> =
         'anthropic-version': ANTHROPIC_VERSION,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: CLAUDE_MODEL,
         max_tokens: MAX_TOKENS,
         system: SYSTEM_PROMPT,
         messages: [
